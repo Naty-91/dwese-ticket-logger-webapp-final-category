@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head ('Ticket Logger - Insertar/Actualizar Categoría')"></head>
+
+<body>
+
+<header th:replace="fragments/header :: header"></header>
+
+<main class="container mt-5">
+  <h1 th:text="${category.id == null} ? #{msg.category-form.add} : #{msg.category-form.edit}"></h1>
+
+  <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+  <form th:action="${category.id == null} ? @{/categories/insert} : @{/categories/update}"
+        th:object="${category}" method="post" class="mt-4">
+    <input type="hidden" th:field="*{id}" />
+    <div th:if="${#fields.hasErrors('id')}" class="text-danger" th:errors="*{id}"></div>
+
+    <div class="mb-3">
+      <label for="name" class="form-label" th:text="#{msg.category-form.name}"></label>
+      <input type="text" th:field="*{name}" id="name" class="form-control" required/>
+      <div th:if="${#fields.hasErrors('name')}" class="text-danger" th:errors="*{name}"></div>
+    </div>
+
+
+
+    <div class="mb-3">
+      <label for="image" class="form-label" th:text="#{msg.category-form.image}"></label>
+      <input type="text" th:field="*{image}" id="image" class="form-control" required/>
+      <div th:if="${#fields.hasErrors('image')}" class="text-danger" th:errors="*{image}"></div>
+    </div>
+
+
+
+    <!-- BOTÓN SELECT PARA EL NOMBRE -->
+    <div class="mb-3">
+      <label for="parentCategory" class="form-label" th:text="#{msg.category-form.parentCategory}"></label>
+      <select th:field="*{name}" id="parentCategory" class="form-control" required>
+        <option value="" th:text="#{msg.category-form.select-name}"></option>
+        <option th:each="parentCategory : ${listCategories}"
+                th:value="${parentCategory.name}"
+                th:text="${parentCategory.name}"
+                th:selected="${category.name == parentCategory.name}"></option>
+      </select>
+      <div th:if="${#fields.hasErrors('name')}" class="text-danger" th:errors="*{name}"></div>
+    </div>
+
+
+
+    <button type="submit" class="btn btn-primary"
+            th:text="${category.id == null} ? #{msg.category-form.create} : #{msg.category-form.update}">
+    </button>
+  </form>
+
+  <a th:href="@{/categories}" class="btn btn-secondary mt-3" th:text="#{msg.category-form.returnback}"></a>
+</main>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+
+</body>
+</html>
