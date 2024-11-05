@@ -18,7 +18,6 @@
     <table class="table table-bordered mt-3">
         <thead>
         <tr>
-            <!-- La tabla se le añade la cabecera para los nuevos atributos de categoria-->
             <th th:text="#{msg.category.id}"></th>
             <th th:text="#{msg.category.name}"></th>
             <th th:text="#{msg.category.image}"></th>
@@ -30,7 +29,16 @@
         <tr th:each="category : ${listCategories}">
             <td th:text="${category.id}"></td>
             <td th:text="${category.name}"></td>
-            <td th:text="${category.image}"></td>
+
+            <!-- Mostrar la imagen si existe -->
+            <td>
+                <img th:if="${category.image != null}"
+                     th:src="@{'/uploads/' + ${category.image}}"
+                     alt="Imagen de la categoría"
+                     style="width: 100px; height: 100px; object-fit: cover;" />
+                <span th:if="${category.image == null}" th:text="#{msg.category.noImage}"></span>
+            </td>
+
             <td th:text="${category.parentCategory != null ? category.parentCategory.name : 'N/A'}"></td>
             <td>
                 <!-- Botón para editar -->

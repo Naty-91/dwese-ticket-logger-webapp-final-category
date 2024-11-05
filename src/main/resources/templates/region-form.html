@@ -1,52 +1,55 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head :: head ('Ticket Logger - Insertar/Actualizar Comunidad Autónoma')"></head>
-
+<head th:replace="fragments/head :: head ('Ticket Logger - Insertar/Actualizar Categoría')"></head>
 <body>
 
-<!-- Incluir el fragmento del header -->
 <header th:replace="fragments/header :: header"></header>
 
-<!-- Muestra un mensaje de error si hay algún problema -->
-<div th:if="${errorMessage}" class="alert alert-danger">
-    <p th:text="${errorMessage}"></p>
-</div>
-
 <main class="container mt-5">
-    <h1 th:text="${region.id == null} ? #{msg.region-form.add} : #{msg.region-form.edit}"></h1>
+    <h1 th:text="${category.id == null} ? #{msg.category-form.add} : #{msg.category-form.edit}"></h1>
 
-
-    <!-- Mostrar un mensaje de error si existe -->
     <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
-    <form th:action="${region.id == null} ? @{/regions/insert} : @{/regions/update}"
-          th:object="${region}" method="post" class="mt-4">
+    <!-- Formulario de inserción/edición de categoría con enctype para permitir la carga de imágenes -->
+    <form th:action="${category.id == null} ? @{/categories/insert} : @{/categories/update}"
+          th:object="${category}" method="post" enctype="multipart/form-data" class="mt-4">
         <input type="hidden" th:field="*{id}" />
         <div th:if="${#fields.hasErrors('id')}" class="text-danger" th:errors="*{id}"></div>
 
-
         <div class="mb-3">
-            <label for="code" class="form-label" th:text="#{msg.region-form.code}"></label>
-            <input type="text" th:field="*{code}" id="code" class="form-control"  required/>
-            <div th:if="${#fields.hasErrors('code')}" class="text-danger" th:errors="*{code}"></div>
-        </div>
-
-        <div class="mb-3">
-            <label for="name" class="form-label" th:text="#{msg.region-form.name}"></label>
-            <input type="text" th:field="*{name}" id="name" class="form-control"  required/>
+            <label for="name" class="form-label" th:text="#{msg.category-form.name}"></label>
+            <input type="text" th:field="*{name}" id="name" class="form-control" required/>
             <div th:if="${#fields.hasErrors('name')}" class="text-danger" th:errors="*{name}"></div>
         </div>
 
+        <!-- Campo independiente para cargar la imagen -->
+        <div class="mb-3">
+            <label for="imageFile" class="form-label" th:text="#{msg.category-form.image}"></label>
+            <input type="file" name="imageFile" id="imageFile" class="form-control" accept="image/*"/>
+        </div>
+
+        <!-- Botón select para la categoría principal -->
+        <div class="mb-3">
+            <label for="parentCategory" class="form-label" th:text="#{msg.category-form.parentCategory}"></label>
+            <select th:field="*{parentCategory}" id="parentCategory" class="form-control">
+                <option value="" th:text="#{msg.category-form.select-name}"></option>
+                <option th:each="parentCategory : ${listCategories}"
+                        th:value="${parentCategory}"
+                        th:text="${parentCategory.name}"
+                        th:selected="${category.parentCategory != null and category.parentCategory.id == parentCategory.id}">
+                </option>
+            </select>
+            <div th:if="${#fields.hasErrors('parentCategory')}" class="text-danger" th:errors="*{parentCategory}"></div>
+        </div>
+
         <button type="submit" class="btn btn-primary"
-                th:text="${region.id == null} ? #{msg.region-form.create} : #{msg.region-form.update}">
+                th:text="${category.id == null} ? #{msg.category-form.create} : #{msg.category-form.update}">
         </button>
     </form>
 
-    <!-- Volver a la lista de regiones -->
-    <a href="#" th:href="@{/regions}" class="btn btn-secondary mt-3" th:text="#{msg.region-form.returnback}"></a>
+    <a th:href="@{/categories}" class="btn btn-secondary mt-3" th:text="#{msg.category-form.returnback}"></a>
 </main>
 
-<!-- Incluir el fragmento del footer -->
 <footer th:replace="fragments/footer :: footer"></footer>
 
 </body>
