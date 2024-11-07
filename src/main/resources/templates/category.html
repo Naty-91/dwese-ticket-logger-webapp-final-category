@@ -14,7 +14,8 @@
         <p th:text="${errorMessage}"></p>
     </div>
 
-    <!-- Muestra la lista de categorías en una tabla -->
+    <!-- Muestra la lista de categorías en una tabla y se ha añadido un campo para visualizar
+    la imagen y la categoria padre -->
     <table class="table table-bordered mt-3">
         <thead>
         <tr>
@@ -30,12 +31,13 @@
             <td th:text="${category.id}"></td>
             <td th:text="${category.name}"></td>
 
-            <!-- Mostrar la imagen si existe -->
+            <!-- Mostrar la imagen si existe.Aqui se modifica tambien el tamaño de la imagen, si no se carga en el navegador
+             puede deberse a que sobrepasa los px por lo que es conveniente redimensionarla-->
             <td>
                 <img th:if="${category.image != null}"
                      th:src="@{'/uploads/' + ${category.image}}"
                      alt="Imagen de la categoría"
-                     style="width: 100px; height: 100px; object-fit: cover;" />
+                     style="width: 200px; height: 200px; object-fit: cover;" />
                 <span th:if="${category.image == null}" th:text="#{msg.category.noImage}"></span>
             </td>
 
